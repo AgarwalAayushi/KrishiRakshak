@@ -51,7 +51,6 @@ cd KrishiRakshak_UI_Pro
 2. Create Virtual Environment (optional but recommended)
 python -m venv venv
 source venv/bin/activate
-# On Windows: venv\Scripts\activate
 
 3. Install Dependencies
 pip install -r requirements.txt
