@@ -1,0 +1,88 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KrishiRakshak — Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">KR</div>
+      <div>
+        <h1>KrishiRakshak — From Soil to Sky</h1>
+        <p class="subtitle">AI crop + credit risk • proactive financial rescue</p>
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">{% for m in messages %}<div>{{ m }}</div>{% endfor %}</div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="kpi">
+      <div class="card">
+        <h3>Avg Crop Risk</h3>
+        <div style="font-size:28px">{{ results.avg_crop }}%</div>
+        <div class="bar"><span style="width: {{ results.avg_crop }}%; background:#5b84ff"></span></div>
+      </div>
+      <div class="card">
+        <h3>Avg Credit Risk</h3>
+        <div style="font-size:28px">{{ results.avg_credit }}%</div>
+        <div class="bar"><span style="width: {{ results.avg_credit }}%; background:#7dffb3"></span></div>
+      </div>
+      <div class="card">
+        <h3>Crop Risk Breakdown</h3>
+        <p>High: {{ results.high }} | Medium: {{ results.med }} | Low: {{ results.low }}</p>
+        <div class="bar"><span style="width: {{ (results.high / (results.high+results.med+results.low)) * 100 if (results.high+results.med+results.low)>0 else 0 }}%; background:#ff6b6b"></span></div>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>Upload Farmers (CSV)</h2>
+      <p>Headers: <code>name,crop,lat,lon,aadhaar_last4,weather_tag,phone</code></p>
+      <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Upload</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Add Farmer</h2>
+      <form method="POST" class="grid">
+        <input name="name" placeholder="Name" required>
+        <input name="crop" placeholder="Crop (Wheat/Rice/Cotton/...)" required>
+        <input name="lat" type="number" step="0.0001" placeholder="Lat" required>
+        <input name="lon" type="number" step="0.0001" placeholder="Lon" required>
+        <input name="aadhaar_last4" placeholder="Aadhaar Last 4" required>
+        <input name="weather_tag" placeholder="Weather (Dry/Rainy/Humid/Normal)" value="Normal">
+        <input name="phone" placeholder="+91XXXXXXXXXX">
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Farmers</h2>
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>Crop</th><th>Lat</th><th>Lon</th><th>Weather</th><th>Phone</th><th>Pipeline</th></tr></thead>
+        <tbody>
+          {% for f in farmers %}
+            <tr>
+              <td>{{ f.id }}</td><td>{{ f.name }}</td><td>{{ f.crop }}</td>
+              <td>{{ '%.4f'|format(f.lat) }}</td><td>{{ '%.4f'|format(f.lon) }}</td>
+              <td>{{ f.weather_tag }}</td><td>{{ f.phone }}</td>
+              <td><a class="button" href="{{ url_for('pipeline_view', fid=f.id) }}">Run</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div style="margin-top:10px"><a class="button" href="{{ url_for('export') }}">⬇️ Export Predictions CSV</a></div>
+    </section>
+
+    <footer><p>Local demo • No heavy dependencies • SMS optional later</p></footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pipeline — {{ farmer.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+  <header><div class="logo">KR</div><div><h1>Pipeline — {{ farmer.name }} ({{ farmer.crop }})</h1></div></header>
+
+  <div class="card">
+    <h3>1) Collect Data</h3>
+    <ul>
+      <li>Weather: {{ stage.collected.rainfall_mm }} mm rain, {{ stage.collected.temp_C }}°C, {{ stage.collected.humidity_pct }}% RH</li>
+      <li>Satellite: NDVI {{ stage.collected.ndvi }}</li>
+      <li>IoT Soil: {{ stage.collected.soil_moisture_pct }}% moisture, {{ stage.collected.soil_temp_C }}°C</li>
+      <li>Finance: credit {{ stage.collected.credit_score }}, missed {{ stage.collected.missed_payments }}</li>
+    </ul>
+  </div>
+
+  <div class="card"><h3>2) Preprocess & Feature Extraction</h3>
+    <p>Clamped ranges, derived moisture/heat/rainfall deficits, greenness retained.</p>
+  </div>
+
+  <div class="card"><h3>3) Run AI Models</h3>
+    <p>
+      Crop Risk: <span class="badge {{ 'high' if stage.results.crop_band=='HIGH' else ('med' if stage.results.crop_band=='MEDIUM' else 'low') }}">{{ stage.results.crop_risk }}% ({{ stage.results.crop_band }})</span>
+      &nbsp; | &nbsp;
+      Credit Risk: <span class="badge {{ 'high' if stage.results.credit_band=='HIGH' else ('med' if stage.results.credit_band=='MEDIUM' else 'low') }}">{{ stage.results.credit_risk }}% ({{ stage.results.credit_band }})</span>
+    </p>
+    <div class="bar"><span style="width: {{ stage.results.crop_risk }}%; background:#ff6b6b"></span></div>
+    <div class="bar" style="margin-top:6px"><span style="width: {{ stage.results.credit_risk }}%; background:#7dffb3"></span></div>
+  </div>
+
+  <div class="card"><h3>4) Alerts & Recommendations</h3>
+    <ul>{% for s in stage.recommendations %}<li>{{ s }}</li>{% endfor %}</ul>
+  </div>
+
+  <div class="card"><h3>5) Deliver & Trigger Financial Rescue</h3>
+    <p>Use CSV export for lender dashboard, pre-fill emergency loan and insurance pre-checks based on above.</p>
+  </div>
+
+  <a class="button" href="{{ url_for('index') }}">⬅ Back</a>
+</div>
+</body>
+</html>
