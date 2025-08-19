@@ -64,7 +64,7 @@ http://127.0.0.1:5000/
 
 🎥 Demo
 
-📺 
+📺 https://www.loom.com/share/025415308cec48bdae7e97efaa82cfb6?sid=257e3f1e-7ee0-402e-bc1f-1d4fba4a5cc1
 
 The demo shows:
 
