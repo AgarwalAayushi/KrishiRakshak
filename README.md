@@ -97,4 +97,4 @@ Partner adoption (banks, insurance)
 
 
 👩‍💻 Contributors
-Aayushi Agarwal – Developer, AgriTech Enthusiast
+Aayushi Agarwal – Developer
